@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: c-compiler-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: c-compiler }
+  template:
+    metadata:
+      labels: { app: c-compiler }
+    spec:
+      containers:
+      - name: c-compiler
+        image: c-compiler-app:latest
+        ports: [{containerPort: 8080}]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: c-compiler-service
+spec:
+  type: NodePort
+  selector: { app: c-compiler }
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 31132   # maps to host 1132 via port-forward

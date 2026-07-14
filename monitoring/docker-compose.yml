@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  graphite:
+    image: graphiteapp/graphite-statsd
+    ports:
+      - "1141:80"     # web UI
+      - "2003:2003"   # carbon plaintext
+      - "8125:8125/udp"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "1142:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on: [graphite]
+
+  nagios:
+    image: jasonrivers/nagios:latest
+    ports:
+      - "1140:80"
