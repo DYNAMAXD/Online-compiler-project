@@ -10,19 +10,19 @@ pipeline {
             steps { checkout scm }
         }
         stage('Build with Maven') {
-            steps { sh 'mvn clean package -DskipTests' }
+            steps { bat 'mvn clean package -DskipTests' }
         }
         stage('Test') {
-            steps { sh 'mvn test' }
+            steps { bat 'mvn test' }
         }
         stage('Docker Build') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest ."
+                bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest ."
             }
         }
         stage('Deploy to K8s') {
             steps {
-                sh """
+                bat """
                   kubectl set image deployment/c-compiler-deployment \
                     c-compiler=${IMAGE_NAME}:${IMAGE_TAG} --record || \
                   kubectl apply -f k8s/deployment.yaml
@@ -33,6 +33,6 @@ pipeline {
     post {
         success { echo "Build ${IMAGE_TAG} deployed successfully." }
         failure { echo "Build failed — check console output." }
-        always  { sh 'docker image prune -f' }
+        always  { bat 'docker image prune -f' }
     }
 }
