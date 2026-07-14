@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Online C Compiler</title></head>
+<body style="font-family:sans-serif;background:#1e1e1e;color:#eee">
+<h2>Online C Compiler</h2>
+<textarea id="code" rows="15" cols="80">#include <stdio.h>
+int main(){ printf("Hello World\n"); return 0; }</textarea><br>
+<button onclick="run()">Run</button>
+<pre id="out" style="background:#111;padding:10px"></pre>
+<script>
+async function run(){
+  const res = await fetch('/api/compile', {method:'POST', body: document.getElementById('code').value});
+  document.getElementById('out').innerText = await res.text();
+}
+</script>
+</body>
+</html>
